@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phase Breaker, A Two-World Grid Puzzle</title>
+  <meta name="description" content="Phase Breaker is a grid puzzle by Aariv Patel. Shift between the alpha and beta worlds, slip through phase doors, gather every shard, and reach the exit before the floor bites back.">
+  <meta property="og:title" content="Phase Breaker, A Two-World Grid Puzzle">
+  <meta property="og:description" content="Shift between two worlds, slip through phase doors, gather the shards, and reach the exit. A grid puzzle by Aariv Patel.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0c1024">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c1024'/%3E%3Cpath d='M8 6h8v20H8z' fill='%23ff9d3d'/%3E%3Cpath d='M16 6h8v20h-8z' fill='%2366d9ff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page">
+    <header class="top">
+      <h1 id="title">Phase Breaker</h1>
+      <nav id="levels-row" class="levels-row" aria-label="Levels"></nav>
+    </header>
+
+    <section class="stage" aria-labelledby="level-name">
+      <div class="hud">
+        <div class="hud-line">
+          <h2 id="level-name">Level</h2>
+          <span id="level-code" class="level-code"></span>
+        </div>
+        <ul class="stats" aria-label="Run stats">
+          <li><span class="stat-label">World</span> <b id="phase-tag" class="phase-tag">ALPHA</b></li>
+          <li><span class="stat-label">Shifts</span> <b id="stat-shifts">0</b></li>
+          <li><span class="stat-label">Shards left</span> <b id="stat-shards">0</b></li>
+          <li><span class="stat-label">Steps</span> <b id="stat-steps">0</b></li>
+          <li><span class="stat-label">Deaths</span> <b id="stat-deaths">0</b></li>
+        </ul>
+      </div>
+
+      <div class="board-wrap">
+        <div id="board" class="board" role="application" tabindex="0"
+             aria-roledescription="puzzle grid"
+             aria-label="Phase Breaker board"
+             aria-describedby="board-help"></div>
+        <div id="banner" class="banner" hidden>
+          <p id="banner-text"></p>
+          <div class="banner-actions">
+            <button id="btn-banner-next" class="btn btn-primary" type="button">Next Level</button>
+            <button id="btn-banner-retry" class="btn" type="button">Try Again</button>
+          </div>
+        </div>
+      </div>
+      <p id="board-help" class="help">Arrow keys walk. Space or <kbd>X</kbd> shifts worlds, <kbd>W</kbd> waits a beat, <kbd>R</kbd> restarts.</p>
+
+      <div class="controls">
+        <button id="btn-shift" class="btn btn-primary" type="button">Shift World</button>
+        <button id="btn-wait" class="btn" type="button">Wait</button>
+        <button id="btn-restart" class="btn" type="button">Restart</button>
+      </div>
+
+      <div id="pad" class="pad" aria-label="Movement pad">
+        <button type="button" data-move="up" aria-label="Move up">&#9650;</button>
+        <button type="button" data-move="left" aria-label="Move left">&#9664;</button>
+        <button type="button" data-move="down" aria-label="Move down">&#9660;</button>
+        <button type="button" data-move="right" aria-label="Move right">&#9654;</button>
+      </div>
+
+      <ul class="legend" aria-label="Tile guide">
+        <li><span class="chip t2"></span>Alpha door, solid in ALPHA</li>
+        <li><span class="chip t3"></span>Beta door, solid in BETA</li>
+        <li><span class="chip t6">&#9670;</span>Shard, gates want them all</li>
+        <li><span class="chip t7">&#8801;</span>Gate, opens with zero left</li>
+        <li><span class="chip t8">&#9650;</span>Hazard, lethal</li>
+        <li><span class="chip t9">+</span>Bit, one extra shift</li>
+      </ul>
+    </section>
+  </main>
+  <div id="live" class="visually-hidden" role="status" aria-live="polite"></div>
+  <script src="src/core.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
