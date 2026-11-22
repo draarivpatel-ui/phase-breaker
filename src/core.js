@@ -416,4 +416,4 @@ var Core = {
 };
 
 if (typeof module !== 'undefined' && module.exports) { module.exports = Core; }
-if (typeof window !== 'undefined') { window.PBCore = Core; }
+if (typeof globalThis !== 'undefined' && globalThis.window) { globalThis.window.PBCore = Core; }

@@ -10,6 +10,7 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <meta name="theme-color" content="#0c1024">
+  <meta name="pb-build" content="2">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c1024'/%3E%3Cpath d='M8 6h8v20H8z' fill='%23ff9d3d'/%3E%3Cpath d='M16 6h8v20h-8z' fill='%2366d9ff'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -25,6 +26,7 @@
         <div class="hud-line">
           <h2 id="level-name">Level</h2>
           <span id="level-code" class="level-code"></span>
+          <span id="mode-tag" class="mode-tag" hidden>REPLAY</span>
         </div>
         <ul class="stats" aria-label="Run stats">
           <li><span class="stat-label">World</span> <b id="phase-tag" class="phase-tag">ALPHA</b></li>
@@ -32,6 +34,17 @@
           <li><span class="stat-label">Shards left</span> <b id="stat-shards">0</b></li>
           <li><span class="stat-label">Steps</span> <b id="stat-steps">0</b></li>
           <li><span class="stat-label">Deaths</span> <b id="stat-deaths">0</b></li>
+        </ul>
+        <ul class="tele" aria-label="Run telemetry">
+          <li class="tele-phase">
+            <span class="stat-label">Phase split</span>
+            <span class="split" aria-hidden="true"><i id="tele-alpha"></i><i id="tele-beta"></i></span>
+          </li>
+          <li><span class="stat-label">Turns</span> <b id="tele-turns">0</b></li>
+          <li><span class="stat-label">Moves</span> <b id="tele-moves">0</b></li>
+          <li><span class="stat-label">Bumps</span> <b id="tele-bumps">0</b></li>
+          <li><span class="stat-label">Tiles seen</span> <b id="tele-visited">0</b></li>
+          <li><span class="stat-label">Best chain</span> <b id="tele-combo">0</b></li>
         </ul>
       </div>
 
@@ -48,7 +61,7 @@
           </div>
         </div>
       </div>
-      <p id="board-help" class="help">Arrow keys walk. Space or <kbd>X</kbd> shifts worlds, <kbd>W</kbd> waits a beat, <kbd>R</kbd> restarts.</p>
+      <p id="board-help" class="help">Arrow keys walk. Space or <kbd>X</kbd> shifts worlds, <kbd>W</kbd> waits a beat, <kbd>R</kbd> restarts. Swipe works on touch screens.</p>
 
       <div class="controls">
         <button id="btn-shift" class="btn btn-primary" type="button">Shift World</button>
@@ -72,9 +85,122 @@
         <li><span class="chip t9">+</span>Bit, one extra shift</li>
       </ul>
     </section>
+
+    <section class="panel" id="panel-replay" aria-labelledby="replay-title">
+      <h2 id="replay-title">Replay and verify</h2>
+      <p class="panel-note">Every run is recorded as a seed plus the exact actions taken. A share link replays it frame for frame on any machine.</p>
+      <div class="tool-row">
+        <button id="btn-copy-replay" class="btn" type="button">Copy Replay Link</button>
+        <button id="btn-watch" class="btn" type="button">Watch Ghost</button>
+        <button id="btn-verify" class="btn" type="button">Verify Run</button>
+        <span id="verify-badge" class="badge" hidden></span>
+      </div>
+      <p id="replay-status" class="status-line">Recording.</p>
+
+      <div id="ghost-controls" class="ghost-controls" hidden>
+        <div class="tool-row">
+          <button id="ghost-play" class="btn btn-primary" type="button">Pause</button>
+          <button id="ghost-back" class="btn" type="button" aria-label="Step back">&#9664;</button>
+          <button id="ghost-fwd" class="btn" type="button" aria-label="Step forward">&#9654;</button>
+          <label class="field-inline">Speed
+            <select id="ghost-speed">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="2">2x</option>
+              <option value="4">4x</option>
+            </select>
+          </label>
+          <button id="ghost-exit" class="btn" type="button">Back to Live</button>
+        </div>
+        <input id="ghost-scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Replay position">
+        <p id="ghost-frame" class="status-line">Frame 0</p>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-export" aria-labelledby="export-title">
+      <h2 id="export-title">Verified export</h2>
+      <p class="panel-note">Download the run audit as JSON or the per-turn table as CSV. The SHA-256 fingerprint is recomputed over the whole audit, so any edit shows up instantly.</p>
+      <div class="tool-row">
+        <button id="btn-export-json" class="btn" type="button">Download Audit JSON</button>
+        <button id="btn-export-csv" class="btn" type="button">Download Telemetry CSV</button>
+        <button id="btn-copy-fp" class="btn" type="button">Copy Fingerprint</button>
+      </div>
+      <p class="status-line">SHA-256 <code id="fp-hex" class="fp">(no run yet)</code></p>
+    </section>
+
+    <section class="panel" id="panel-bench" aria-labelledby="bench-title">
+      <h2 id="bench-title">Scenario bench</h2>
+      <p class="panel-note">Tune the parameters and generate a level. The built-in verifier only ships boards it can prove solvable, and the same parameters always produce the same board.</p>
+      <div class="bench-grid">
+        <label class="field">Seed <input id="bench-seed" type="text" value="spark" maxlength="32"></label>
+        <label class="field">Width <input id="bench-w" type="number" min="5" max="24" value="13"></label>
+        <label class="field">Height <input id="bench-h" type="number" min="3" max="16" value="9"></label>
+        <label class="field">Shift budget <input id="bench-shifts" type="number" min="0" max="8" value="3"></label>
+        <label class="field">Wall density % <input id="bench-walls" type="number" min="0" max="40" value="22"></label>
+        <label class="field">Hazard density % <input id="bench-hazards" type="number" min="0" max="25" value="5"></label>
+        <label class="field">Shards <input id="bench-shards" type="number" min="0" max="8" value="2"></label>
+        <label class="field">Bits <input id="bench-bits" type="number" min="0" max="8" value="1"></label>
+        <label class="field">Phase doors <input id="bench-doors" type="number" min="0" max="8" value="2"></label>
+        <label class="field">Preset
+          <select id="bench-preset">
+            <option value="">Custom</option>
+          </select>
+        </label>
+      </div>
+      <div class="tool-row">
+        <button id="btn-bench-gen" class="btn btn-primary" type="button">Generate</button>
+        <button id="btn-bench-play" class="btn" type="button" disabled>Play This Board</button>
+        <button id="btn-bench-share" class="btn" type="button" disabled>Copy Share Link</button>
+      </div>
+      <div id="bench-preview" class="mini-board" aria-label="Generated board preview"></div>
+      <p id="bench-status" class="status-line"></p>
+    </section>
+
+    <section class="panel" id="panel-designer" aria-labelledby="designer-title">
+      <h2 id="designer-title">Level designer</h2>
+      <p class="panel-note">Paint tiles onto the grid, check the board is winnable, then play it or send it as a link. The verifier searches the full phase mechanic before it says yes.</p>
+      <div id="palette" class="palette" role="toolbar" aria-label="Tile palette"></div>
+      <div class="designer-grid">
+        <div id="design-board" class="design-board" aria-label="Design board"></div>
+        <div class="designer-side">
+          <div class="tool-row">
+            <label class="field-inline">W <input id="design-w" type="number" min="5" max="24" value="11"></label>
+            <label class="field-inline">H <input id="design-h" type="number" min="3" max="16" value="7"></label>
+            <label class="field-inline">Shifts <input id="design-shifts" type="number" min="0" max="8" value="3"></label>
+            <button id="btn-design-resize" class="btn" type="button">Apply Size</button>
+          </div>
+          <label class="field field-block">Rows
+            <textarea id="design-rows" rows="7" spellcheck="false"></textarea>
+          </label>
+          <div class="tool-row">
+            <button id="btn-design-validate" class="btn" type="button">Validate</button>
+            <button id="btn-design-play" class="btn btn-primary" type="button" disabled>Play This Board</button>
+            <button id="btn-design-share" class="btn" type="button" disabled>Copy Share Link</button>
+            <button id="btn-design-load" class="btn" type="button">Load From Text</button>
+          </div>
+          <p id="design-status" class="status-line"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-selftest" aria-labelledby="selftest-title">
+      <h2 id="selftest-title">Self tests</h2>
+      <p class="panel-note">Runs the same invariant battery the Node suite checks: determinism, physics rules, codec round trips, solvability proofs and audit fingerprints.</p>
+      <div class="tool-row">
+        <button id="btn-selftest" class="btn btn-primary" type="button">Run Self-Tests</button>
+        <span id="selftest-summary" class="status-line"></span>
+      </div>
+      <ul id="selftest-list" class="selftest-list" aria-label="Self test results"></ul>
+    </section>
   </main>
   <div id="live" class="visually-hidden" role="status" aria-live="polite"></div>
   <script src="src/core.js"></script>
+  <script src="src/sha256.js"></script>
+  <script src="src/replay.js"></script>
+  <script src="src/telemetry.js"></script>
+  <script src="src/designer.js"></script>
+  <script src="src/audit.js"></script>
+  <script src="src/selftest.js"></script>
   <script src="js/levels.js"></script>
   <script src="js/app.js"></script>
 </body>
