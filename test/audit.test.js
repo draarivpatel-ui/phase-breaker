@@ -202,3 +202,15 @@ test('canonical audit hash equals sha256 of canonicalize', () => {
   delete copy.fingerprint;
   assert.equal(Sha.sha256hex(Audit.canonicalize(copy)), a.fingerprint);
 });
+
+test('custom board audits do not invent a shipped-level share code', () => {
+  const l = Core.levelFromRows(['#####', '#S.G#', '#####'], { shifts: 0, seed: 'custom-1' });
+  const final = playAll(l, ['right', 'right']);
+  const a = Audit.buildAudit({
+    level: l, levelIndex: -1, levelName: 'Custom',
+    actions: ['right', 'right'], final: final
+  });
+  assert.equal(a.level.index, -1);
+  assert.equal(a.level.shareCode, null);
+  assert.equal(Audit.verifyAudit(a), true);
+});

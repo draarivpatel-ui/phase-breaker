@@ -447,3 +447,13 @@ test('author level solutions win on the engine', () => {
     assert.equal(s.status, 'won', src.name);
   }
 });
+
+test('serializeDesign rejects non integer or out of range shift budgets instead of writing unparseable blobs', () => {
+  const rows = ['#####', '#S.G#', '#####'];
+  for (const bad of [-1, 1.5, 100, NaN, Infinity]) {
+    assert.equal(D.serializeDesign(rows, { shifts: bad }), null, String(bad));
+  }
+  const good = D.serializeDesign(rows, { shifts: 99 });
+  assert.ok(good);
+  assert.equal(D.parseDesign(good).shifts, 99);
+});

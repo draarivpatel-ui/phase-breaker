@@ -77,7 +77,7 @@ function buildAudit(opts) {
       width: level ? level.width : 0,
       height: level ? level.height : 0,
       fingerprint: String(level && level.fingerprint != null ? level.fingerprint : ''),
-      shareCode: level ? Core.encodeSeedCode(level.seed, Math.max(0, opts.levelIndex | 0)) : null
+      shareCode: level && Number.isInteger(opts.levelIndex) && opts.levelIndex >= 0 ? Core.encodeSeedCode(level.seed, opts.levelIndex) : null
     },
     run: {
       actions: actions,

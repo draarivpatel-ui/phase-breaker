@@ -231,3 +231,12 @@ test('CSV of a real run round trips through the tracker', () => {
 test('CSV ends with a trailing newline', () => {
   assert.ok(Tel.toCSV([]).endsWith('\n'));
 });
+
+test('csvCell neutralizes spreadsheet formulas and whitespace padded formulas', () => {
+  assert.equal(Tel.csvCell('=SUM(1)'), "'=SUM(1)");
+  assert.equal(Tel.csvCell('+cmd'), "'+cmd");
+  assert.equal(Tel.csvCell('@x'), "'@x");
+  assert.equal(Tel.csvCell(' =SUM(1)'), "' =SUM(1)");
+  assert.equal(Tel.csvCell('-x'), "'-x");
+  assert.equal(Tel.csvCell('-12.5'), '-12.5', 'plain negative numbers stay numeric');
+});

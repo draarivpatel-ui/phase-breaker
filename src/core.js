@@ -365,6 +365,9 @@ var ROW_TILES = {
  */
 function levelFromRows(rows, opts) {
   var options = opts || {};
+  if (options.shifts !== undefined && (!Number.isInteger(options.shifts) || options.shifts < 0)) {
+    throw new Error('shifts must be a non-negative integer');
+  }
   if (!Array.isArray(rows) || rows.length === 0) {
     throw new Error('level needs at least one row');
   }

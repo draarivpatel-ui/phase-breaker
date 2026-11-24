@@ -1,3 +1,20 @@
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  z-index: 30;
+  transform: translateY(-180%);
+  background: var(--panel);
+  color: var(--text);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
 /* PhaseBreaker styles. Two worlds: ALPHA burns amber, BETA runs cold cyan. */
 :root {
   color-scheme: dark;

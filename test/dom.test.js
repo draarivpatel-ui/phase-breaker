@@ -450,3 +450,15 @@ test('new level starts at tick 0 with fresh stats', () => {
   assert.equal(document.getElementById('stat-steps').textContent, '0');
   assert.match(document.getElementById('level-name').textContent, /Cross Currents/);
 });
+
+test('keyboard access includes a skip link target and a labelled movement pad group', () => {
+  const { document } = fresh();
+  const skip = document.querySelector('.skip-link');
+  assert.equal(skip && skip.getAttribute('href'), '#main');
+  const main = document.querySelector('main');
+  assert.equal(main.id, 'main');
+  assert.equal(main.getAttribute('tabindex'), '-1');
+  const pad = document.getElementById('pad');
+  assert.equal(pad.getAttribute('role'), 'group');
+  assert.equal(pad.getAttribute('aria-label'), 'Movement pad');
+});

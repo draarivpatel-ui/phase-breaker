@@ -15,7 +15,8 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="page">
+  <a class="skip-link" href="#main">Skip to the puzzle</a>
+  <main class="page" id="main" tabindex="-1">
     <header class="top">
       <h1 id="title">Phase Breaker</h1>
       <nav id="levels-row" class="levels-row" aria-label="Levels"></nav>
@@ -69,7 +70,7 @@
         <button id="btn-restart" class="btn" type="button">Restart</button>
       </div>
 
-      <div id="pad" class="pad" aria-label="Movement pad">
+      <div id="pad" class="pad" role="group" aria-label="Movement pad">
         <button type="button" data-move="up" aria-label="Move up">&#9650;</button>
         <button type="button" data-move="left" aria-label="Move left">&#9664;</button>
         <button type="button" data-move="down" aria-label="Move down">&#9660;</button>

@@ -399,7 +399,7 @@ const SCRIPTS = [
 
 /*
  * Boot the real page in mini-DOM. Returns {window, document, require file
- * errors: []} — every script runs inside a vm context where bare `window`,
+ * errors: []}; every script runs inside a vm context where bare `window`,
  * `document`, `location`, `navigator`, `localStorage`, `globalThis` and
  * `module` resolve to the test doubles, exactly like a browser.
  */

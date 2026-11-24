@@ -490,3 +490,9 @@ test('levelFromRows: null and non-array blow up cleanly', () => {
   assert.throws(() => Core.levelFromRows('#####'));
   assert.throws(() => Core.levelFromRows([5, 5, 5]));
 });
+
+test('levelFromRows rejects negative, fractional and non finite shift budgets', () => {
+  for (const bad of [-1, 1.5, NaN, Infinity, -Infinity]) {
+    assert.throws(() => Core.levelFromRows(['#####', '#S.G#', '#####'], { shifts: bad }), /shifts/, String(bad));
+  }
+});

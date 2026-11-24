@@ -328,7 +328,8 @@ function serializeDesign(rows, opts) {
       tiles[y * w + x] = t;
     }
   }
-  var shifts = Number.isFinite(options.shifts) ? options.shifts : 0;
+  var shifts = options.shifts === undefined ? 0 : options.shifts;
+  if (!Number.isInteger(shifts) || shifts < 0 || shifts > 99) { return null; }
   var body = 'd1.' + w.toString(36) + 'x' + h.toString(36) + '.' +
     shifts.toString(36) + '.' + Replay.b64encode(tiles);
   return body + '.' + Core.hashHex(body);
