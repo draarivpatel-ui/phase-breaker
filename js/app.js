@@ -687,7 +687,7 @@
       }
     }
     dom.designBoard.style.setProperty('grid-template-columns',
-      'repeat(' + w + ', 26px)');
+      'repeat(' + w + ', var(--dcell-size))');
     dom.designBoard.replaceChildren(frag);
   }
 

@@ -25,7 +25,7 @@
   --ink: #eef1ff;
   --ink-soft: #9aa3c7;
   --alpha: #ff9d3d;
-  --alpha-deep: #b25c14;
+  --alpha-deep: #a84f08;
   --beta: #66d9ff;
   --beta-deep: #1d6f8f;
   --danger: #ff5d5d;
@@ -565,11 +565,15 @@ button[disabled]:hover { transform: none; }
   align-items: start;
 }
 
-.design-board { margin-top: 0; }
+.design-board {
+  margin-top: 0;
+  --dcell-size: 26px;
+  overflow-x: auto;
+}
 
 .dcell {
-  width: 26px;
-  height: 26px;
+  width: var(--dcell-size);
+  height: var(--dcell-size);
   border: 0;
   border-radius: 4px;
   padding: 0;
@@ -659,7 +663,7 @@ button[disabled]:hover { transform: none; }
   .stats { gap: 6px 14px; }
   .tele { gap: 6px 14px; }
   .panel { padding: 14px 16px; }
-  .dcell { width: 22px; height: 22px; }
+  .design-board { --dcell-size: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
