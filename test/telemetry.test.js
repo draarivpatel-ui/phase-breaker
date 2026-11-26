@@ -240,3 +240,12 @@ test('csvCell neutralizes spreadsheet formulas and whitespace padded formulas', 
   assert.equal(Tel.csvCell('-x'), "'-x");
   assert.equal(Tel.csvCell('-12.5'), '-12.5', 'plain negative numbers stay numeric');
 });
+
+
+test('batch4 csv guard covers invisible unicode prefixes and numeric negatives', () => {
+  for (const input of ['\u200b=cmd', '\ufeff=cmd', '\u00a0=cmd', '\u2060@cmd', ' \u200b\t=cmd']) {
+    const out = Tel.csvCell(input);
+    assert.ok(out.startsWith("'") || out.startsWith("\"'"), input + ' -> ' + out);
+  }
+  assert.ok(!String(Tel.csvCell(-12.5)).includes("'"));
+});

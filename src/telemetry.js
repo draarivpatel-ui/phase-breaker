@@ -168,7 +168,7 @@ var CSV_COLS = ['tick', 'action', 'x', 'y', 'phase', 'shifts', 'shardsLeft', 'st
 function csvCell(v) {
   var s = v == null ? '' : String(v);
   var numeric = s !== '' && isFinite(Number(s));
-  if (!numeric && /^[\s=+\-@]/.test(s)) { s = "'" + s; }
+  if (!numeric && /^[\s\p{Cf}\p{Cc}]*[=+\-@\t\r]/u.test(s)) { s = "'" + s; }
   return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
 }
 
