@@ -122,7 +122,7 @@ Run the test suite (Node's built-in runner, no packages to install):
 node --test test/
 ```
 
-Verified: 420 tests, 420 passing, 0 failures. The suite covers
+Verified: 421 tests, 421 passing, 0 failures. The suite covers
 deterministic RNG golden streams, hashing stability, the solidity truth
 table across phases and shard counts, movement, wall bumps and the full
 action cost model, edge and boundary states, replay packing, checksums and

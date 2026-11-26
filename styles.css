@@ -673,3 +673,24 @@ button[disabled]:hover { transform: none; }
     animation-iteration-count: 1 !important;
   }
 }
+
+@media print {
+  @page { margin: 0.5in; }
+  :root {
+    color-scheme: light;
+    --bg: #fff; --bg-soft: #fff; --panel: #fff; --line: #999;
+    --ink: #111; --ink-soft: #333; --alpha: #555; --beta: #333;
+  }
+  body { background: #fff !important; color: #111 !important; }
+  .skip-link, .levels-row, .controls, .pad, .banner-actions, .tool-row,
+  .palette, input, select, textarea { display: none !important; }
+  .page { width: auto !important; padding: 0 !important; }
+  .panel {
+    background: #fff !important; color: #111 !important; border-color: #999 !important;
+    box-shadow: none !important; break-inside: avoid;
+  }
+  .board, .mini-board, .design-board { background: #fff !important; border-color: #999 !important; }
+  .design-board { overflow: visible !important; }
+  .hud, .stats, .tele, .legend { color: #111 !important; }
+  canvas, svg { max-width: 100% !important; height: auto !important; }
+}
