@@ -4,6 +4,6 @@
   "private": true,
   "description": "Phase Breaker, a two-world grid puzzle. Pure deterministic core plus a browser shell.",
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test"
   }
 }

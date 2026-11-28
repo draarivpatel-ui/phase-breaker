@@ -119,7 +119,7 @@ python3 -m http.server 8000
 Run the test suite (Node's built-in runner, no packages to install):
 
 ```sh
-node --test test/
+node --test
 ```
 
 Verified: 421 tests, 421 passing, 0 failures. The suite covers
